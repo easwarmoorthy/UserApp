@@ -1,9 +1,90 @@
-<form [formGroup]="registerForm">
-  <div class="form-item"><label for="firstName">First name</label><input type="text"  formControlName="firstName" placeholder="Enter First name" required></div>
-  <div class="form-item"><label for="lastName">Last Name</label><input type="text"  formControlName="lastName" placeholder="Enter Last name" required></div>
-  <div class="form-item"><label for="username">username</label><input type="text"  formControlName="username" placeholder="Pick a username" required></div>
-  <div class="form-item"><label for="email">Email</label><input type="email" formControlName="email"  placeholder="Enter email" required></div>
-  <div class="form-item"><label for="password">Password</label><input type="password" formControlName="password"  placeholder="Enter password" required></div>
-  <div class="form-item"><label for="confirmPassword">Confirm Password</label><input type="password"  formControlName="confirmPassword" placeholder="Enter confirm password" required></div>
-  <div class="form-item"><button (click)="log()" [disabled]="!registerForm.valid">Submit </button></div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 mx-auto">
+<form [formGroup]="registerForm" class="mt-5">
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label"  for="firstName">First name</label>
+    <div class="col-sm-8">
+      <input type="text" formControlName="firstName" class="form-control" placeholder="Enter First name" required>
+
+      <div class="error-message" [ngClass]="{'is-valid invalid-feedback':registerForm.get('firstName').touched && registerForm.get('firstName').invalid}">
+        <div>First name is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="lastName">Last Name</label>
+    <div class="col-sm-8">
+
+      <input type="text" formControlName="lastName" class="form-control" placeholder="Enter Last name" required>
+      <div class="error-message" [ngClass]="{'is-valid invalid-feedback':registerForm.get('lastName').touched && registerForm.get('lastName').invalid}">
+        <div>Last name is required.</div>
+      </div>
+    </div>
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="email">Email</label>
+    <div class="col-sm-8">
+
+      <input type="email" formControlName="email"  (input)="emailChange($event.target.value)" class="form-control" placeholder="Enter email"
+      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+
+      <div class="error-message" *ngIf="registerForm.get('email').errors" [ngClass]="{'is-valid invalid-feedback':registerForm.get('email').touched && registerForm.get('email').invalid}">
+        <div *ngIf="registerForm.get('email').errors.required">Email is required.</div>
+        <div *ngIf="registerForm.get('email').errors.email">Enter a valid email</div>
+        <div *ngIf="registerForm.get('email').errors.pattern">Enter a valid email</div>
+      </div>
+      <div *ngIf="duplicateEmail">
+        <div>Email is already in use.</div>
+      </div>
+    </div>
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="company">Company Name</label>
+    <div class="col-sm-8">
+
+      <input type="text" formControlName="company" class="form-control" placeholder="Enter Company">
+      <div class="error-message" [ngClass]="{'is-valid invalid-feedback':registerForm.get('company').touched && registerForm.get('company').invalid}">
+        <div>Company name is required.</div>
+      </div>
+    </div>
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="password">Password</label>
+    <div class="col-sm-8">
+
+      <input type="password" formControlName="password" class="form-control" placeholder="Enter password" required>
+
+      <div class="error-message" [ngClass]="{'is-valid invalid-feedback':registerForm.get('password').touched && registerForm.get('password').errors}">
+        <div *ngIf="registerForm.get('password').errors?.required">Password is required.</div>
+        <div *ngIf="registerForm.get('password').errors?.minlength">Password should be minimum 8 characters.</div>
+      </div>
+    </div>
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="confirmPassword">Confirm Password </label>
+    <div class="col-sm-8">
+
+      <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Enter confirm password" required>
+
+      <div class="error-message" [ngClass]="{'is-valid invalid-feedback':registerForm.get('confirmPassword').touched}">
+        <div *ngIf="registerForm.get('confirmPassword').errors?.required">Confirm password is required.</div>
+        <div *ngIf="registerForm.errors?.notSame">Confirm password doesn't match with password</div>
+      </div>
+    </div>
+    </div>
+  <div class="form-group row">
+    <button (click)="submit()" class="btn btn-primary mx-auto">Submit </button></div>
 </form>
+<div *ngIf="successMessage" class="alert alert-success" role="alert">
+  Thanks for Registering!
+</div>
+<div *ngIf="failureMessage" class="alert alert-danger" role="alert">
+  Error occured.
+</div>
+<div class="float-right">
+  <a routerLink="/login" class="badge badge-secondary p-2 m-2">Login</a>
+</div>
+</div>
+</div>
+</div>
